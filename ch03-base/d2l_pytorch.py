@@ -73,6 +73,8 @@ def show_fashion_mnist(images, labels):
         f.axes.get_yaxis().set_visible(False)
     plt.show()
 
+"""
+3.13之前
 # 评估net模型在data_iter小批量数据上的准确率
 def evaluate_accuracy(data_iter,net):
     acc_sum,n=0.0,0
@@ -80,6 +82,26 @@ def evaluate_accuracy(data_iter,net):
         acc_sum+=(net(X).argmax(dim=1) == y).float().sum().item()
         n+=y.shape[0]
     return acc_sum/n
+"""
+# 模型中加入dropout，只在训练时使用，在评估的时候需要去掉dropout
+def evaluate_accuracy(data_iter,net):
+    acc_sum,n=0.0,0
+    for X,y in data_iter:
+        if isinstance(net,torch.nn.Module):
+            # 评估模式，会关闭dropout
+            net.eval()
+            acc_sum+=(net(X).argmax(dim=1) == y).float().sum().item()
+            # 改回训练模型
+            net.train()
+        else:
+            # 自定义的模型
+            if('is_training' in net.__code__.co_varnames):
+                # 如果有is_training这个参数
+                acc_sum+=(net(X,is_training=False).argmax(dim=1) == y).float().sum().item()
+        n+=y.shape[0]
+    return acc_sum/n
+
+
 
 # 反向传播，更新参数params
 def sgd(params, lr, batch_size):
