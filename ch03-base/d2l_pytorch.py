@@ -126,4 +126,12 @@ def train_ch03(net,train_iter,test_iter,loss,batch_size,num_epochs,params=None,l
         test_acc=evaluate_accuracy(test_iter,net)
         print('epoch %d, loss %.4f, train acc %.3f,test acc %.3f'
                 %(epoch+1,train_loss_sum/n,train_acc_sum/n,test_acc))
+
+# 定义一个展平层
+class FlattenLayer(torch.nn.Module):
+    def __init__(self):
+        super(FlattenLayer, self).__init__()
+    def forward(self, x): # x shape: (batch, *, *, ...)
+        return x.view(x.shape[0], -1)
+
     

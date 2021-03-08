@@ -64,13 +64,15 @@ def predict(net,X):
     # 每个样本（即每张图片），只有一个类别标签
     return net(X).argmax(dim=1).numpy()
 
-def show_predict(net,test_iter):
-    x,y=iter(test_iter).next()
+def show_predict(net,x,y):
+    
     labels=d2l.get_fashion_mnist_labels(y.numpy())
     pred=d2l.get_fashion_mnist_labels(predict(net,x))
 
-    titles = [true + '\n' + pred for true, pred in zip(labels, pred)]
-    d2l.show_fashion_mnist(x[0:9],titles)
+    # titles = [true + '\n' + pred for true, pred in zip(labels, pred)]
+    # d2l.show_fashion_mnist(x[0:9],titles)
+    for true, pred in zip(labels, pred):
+        print(' label  :%s\n predict:%s'%(true, pred))
 
 
 if __name__=='__main__':
@@ -84,7 +86,8 @@ if __name__=='__main__':
     net=linear_model(train_iter,test_iter)
 
     # 预测
-    # show_predict(net,test_iter)
+    x,y=iter(test_iter).next()
+    show_predict(net,x,y)
 
 
 
