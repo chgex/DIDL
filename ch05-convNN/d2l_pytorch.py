@@ -1,7 +1,7 @@
 '''
 Author: liubai
 Date: 2021-03-08
-LastEditTime: 2021-03-12
+LastEditTime: 2021-03-14
 '''
 
 
@@ -84,7 +84,7 @@ def evaluate_accuracy(data_iter,net):
     return acc_sum/n
 """
 # 模型中加入dropout，只在训练时使用，在评估的时候需要去掉dropout
-def evaluate_accuracy(data_iter,net):
+def evaluate_accuracy_ch03(data_iter,net):
     acc_sum,n=0.0,0
     for X,y in data_iter:
         if isinstance(net,torch.nn.Module):
@@ -166,4 +166,62 @@ def corr2d(X, K):
         for j in range(Y.shape[1]):
             Y[i, j] = (X[i: i + h, j: j + w] * K).sum()
     return Y
+
+
+
+###############5.5
+def evaluate_accuracy_ch05(data_iter,net,device=None):
+    # gpu
+    if device is None and isinstance(net,torch.nn.Module):
+        # 如果没有指定device，则使用net的device
+        device=list(net.parameters())[0].device
+    # 准确率，总数
+    acc_sum,n=0.0,0
+    # with torch.no_grad： disables tracking of gradients in autograd. 
+    # model.eval()： changes the forward() behaviour of the module it is called upon.
+    with torch.no_grad():
+        for X,y in data_iter:
+            if isinstance(net,torch.nn.Module):
+                # 评估模式，该模式会关闭dropout
+                net.eval()
+                # torch.argmax(input, dim, keepdim=False) → LongTensor返回指定维度的最大值的索引。
+                acc_sum+=( net(X.to(device)).argmax(dim=1) == y.to(device) ).float().sum().cpu().item()
+            else: # 无GPU
+                if('is_training' in net.__code__.co_varnames): # 如果有is_training这个参数
+                    # 将is_training设置成False
+                    acc_sum += (net(X, is_training=False).argmax(dim=1) == y).float().sum().item() 
+                else:
+                    acc_sum += (net(X).argmax(dim=1) == y).float().sum().item() 
+            n+=y.shape[0]
+    return acc_sum/n
+
+def train_ch05(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
+    net=net.to(device)
+    print('training on ',device)
+    # 损失函数，使用交叉熵损失函数
+    loss=torch.nn.CrossEntropyLoss()
+    
+    for epoch in range(num_epochs):
+        train_l_sum,train_acc_sum,n,batch_count,start=0.0,0.0,0,0,time.time()
+        for X,y in train_iter:
+            X=X.to(device)
+            y=y.to(device)
+            y_hat=net(X)
+            l=loss(y_hat,y)
+            # 梯度清零
+            optimizer.zero_grad()
+            # 反向传播
+            l.backward()
+            # 更新参数
+            optimizer.step()
+            
+            # 更新损失和正确率
+            train_l_sum+=l.cpu().item()
+            train_acc_sum+=(y_hat.argmax(dim=1) == y ).sum().cpu().item()
+            n+=y.shape[0]
+            batch_count+=1
+        # 测试集上的正确率
+        test_acc=evaluate_accuracy_ch05(test_iter,net)
+        print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
+        %(epoch+1,train_l_sum/batch_count,train_acc_sum/n,test_acc,time.time()-start))    
 
