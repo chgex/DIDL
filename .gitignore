@@ -1,4 +1,6 @@
+datasets/
 FashionMNIST/
 ch03-base/__pycache__/
 ch05-convNN/__pycache__/
-datasets/
+ch05-convNN/.ipynb_checkpoints/
+ch05-convNN/.vscode/

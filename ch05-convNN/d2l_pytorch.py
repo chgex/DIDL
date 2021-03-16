@@ -1,7 +1,7 @@
 '''
 Author: liubai
 Date: 2021-03-08
-LastEditTime: 2021-03-14
+LastEditTime: 2021-03-16
 '''
 
 
@@ -169,7 +169,7 @@ def corr2d(X, K):
 
 
 
-###############5.5
+###########################5.5
 def evaluate_accuracy_ch05(data_iter,net,device=None):
     # gpu
     if device is None and isinstance(net,torch.nn.Module):
@@ -195,6 +195,8 @@ def evaluate_accuracy_ch05(data_iter,net,device=None):
             n+=y.shape[0]
     return acc_sum/n
 
+
+###########################ch5.5
 def train_ch05(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
     net=net.to(device)
     print('training on ',device)
@@ -215,6 +217,60 @@ def train_ch05(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
             # 更新参数
             optimizer.step()
             
+            # 更新损失和正确率
+            train_l_sum+=l.cpu().item()
+            train_acc_sum+=(y_hat.argmax(dim=1) == y ).sum().cpu().item()
+            n+=y.shape[0]
+            batch_count+=1
+        # 测试集上的正确率
+        test_acc=evaluate_accuracy_ch05(test_iter,net)
+        print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
+        %(epoch+1,train_l_sum/batch_count,train_acc_sum/n,test_acc,time.time()-start))    
+
+#########################ch5.6
+def load_data_fashion_mnist_ch05(batch_size, resize=None, root='..'):
+    """Download the fashion mnist dataset and then load into memory."""
+    trans = []
+    if resize:
+        trans.append(torchvision.transforms.Resize(size=resize))
+    trans.append(torchvision.transforms.ToTensor())
+    
+    transform = torchvision.transforms.Compose(trans)
+    mnist_train = torchvision.datasets.FashionMNIST(root=root, train=True, download=False, transform=transform)
+    mnist_test = torchvision.datasets.FashionMNIST(root=root, train=False, download=False, transform=transform)
+    if sys.platform.startswith('win'):
+        num_workers = 0  # 0表示不用额外的进程来加速读取数据
+    else:
+        num_workers = 4
+    train_iter = torch.utils.data.DataLoader(mnist_train, batch_size=batch_size, shuffle=True, num_workers=num_workers)
+    test_iter = torch.utils.data.DataLoader(mnist_test, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+
+    return train_iter, test_iter
+
+###########################ch5.6
+def train_ch05(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
+    net=net.to(device)
+    print('training on ',device)
+    # 损失函数，使用交叉熵损失函数
+    loss=torch.nn.CrossEntropyLoss()
+    
+    for epoch in range(num_epochs):
+        train_l_sum,train_acc_sum,n,batch_count,start=0.0,0.0,0,0,time.time()
+        for i,(X,y) in enumerate(train_iter):
+            X=X.to(device)
+            y=y.to(device)
+            y_hat=net(X)
+            l=loss(y_hat,y)
+            # 梯度清零
+            optimizer.zero_grad()
+            # 反向传播
+            l.backward()
+            # 更新参数
+            optimizer.step()
+            
+            print('epoch %d/%d, iter %d/%d, loss %.3f' 
+                    % (epoch,num_epochs,i,60000//batch_size,l.cpu().item()))
+
             # 更新损失和正确率
             train_l_sum+=l.cpu().item()
             train_acc_sum+=(y_hat.argmax(dim=1) == y ).sum().cpu().item()
