@@ -1,12 +1,13 @@
 '''
 Author: liubai
 Date: 2021-03-08
-LastEditTime: 2021-03-16
+LastEditTime: 2021-03-17
 '''
 
 
 import torch
 import torchvision
+from torch import nn,optim
 
 # load_data_fashion_mnist()
 import torchvision.transforms as transforms  
@@ -145,7 +146,7 @@ def train_ch03(net,train_iter,test_iter,loss,batch_size,num_epochs,params=None,l
             train_acc_sum+=(y_hat.argmax(dim=1) == y ).sum().item()
             n+=y.shape[0]
         # 一遍epoch结束，计算在测试集上的准确率
-        test_acc=evaluate_accuracy(test_iter,net)
+        test_acc=evaluate_accuracy_ch03(test_iter,net)
         print('epoch %d, loss %.4f, train acc %.3f,test acc %.3f'
                 %(epoch+1,train_loss_sum/n,train_acc_sum/n,test_acc))
 
@@ -281,3 +282,15 @@ def train_ch05(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
         %(epoch+1,train_l_sum/batch_count,train_acc_sum/n,test_acc,time.time()-start))    
 
+
+###########################ch5.8
+# 定义全局池化层
+
+import torch.nn.functional as F 
+
+class GlobalAvgPool2d(nn.Module):
+    def __init__(self):
+        super(GlobalAvgPool2d,self).__init__()
+    def forward(self,x):
+        # 全局池化层的大小，等于输入的高和宽
+        return F.avg_pool2d(x,kernel_size=x.size()[2:])
