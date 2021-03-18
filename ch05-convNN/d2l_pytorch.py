@@ -1,7 +1,7 @@
 '''
 Author: liubai
 Date: 2021-03-08
-LastEditTime: 2021-03-17
+LastEditTime: 2021-03-18
 '''
 
 
@@ -198,7 +198,7 @@ def evaluate_accuracy_ch05(data_iter,net,device=None):
 
 
 ###########################ch5.5
-def train_ch05(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
+def train_ch05_bak(net,train_iter,test_iter,batch_size,optimizer,device,num_epochs):
     net=net.to(device)
     print('training on ',device)
     # 损失函数，使用交叉熵损失函数
