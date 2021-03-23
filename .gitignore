@@ -4,6 +4,6 @@ datasets/
 0_DLNote/ch05-convNN/.ipynb_checkpoints/
 0_DLNote/ch05-convNN/.vscode/
 ZFNet/.vscode/
-ZFNet/_pycache_/
+ZFNet/__pycache__/
 ZFNet/weights/
 
