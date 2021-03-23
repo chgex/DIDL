@@ -1,6 +1,9 @@
 datasets/
-FashionMNIST/
-ch03-base/__pycache__/
-ch05-convNN/__pycache__/
-ch05-convNN/.ipynb_checkpoints/
-ch05-convNN/.vscode/
+0_DLNote/ch03-base/__pycache__/
+0_DLNote/ch05-convNN/__pycache__/
+0_DLNote/ch05-convNN/.ipynb_checkpoints/
+0_DLNote/ch05-convNN/.vscode/
+ZFNet/.vscode/
+ZFNet/_pycache_/
+ZFNet/weights/
+
