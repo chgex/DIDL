@@ -3,7 +3,7 @@ datasets/
 0_DLNote/ch05-convNN/__pycache__/
 0_DLNote/ch05-convNN/.ipynb_checkpoints/
 0_DLNote/ch05-convNN/.vscode/
-ZFNet/.vscode/
-ZFNet/__pycache__/
-ZFNet/weights/
-
+2014_ZFNet/__pycache__/
+2014_ZFNet/weights/
+2016_FENet/__pycache__/
+script/__pycache__/
