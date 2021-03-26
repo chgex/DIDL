@@ -1,7 +1,7 @@
 '''
 Author: liubai
 Date: 2021-03-08
-LastEditTime: 2021-03-25
+LastEditTime: 2021-03-26
 '''
 
 
@@ -15,22 +15,20 @@ import matplotlib.pyplot as plt
 from IPython import display
 import time
 import sys
-sys.path.append("..") # 为了导入上层目录script中的d2lzh_pytorch
 
-
-
+datasets_path="d:/Github/DIDL/datasets/"
 
 
 # 加载fashionMNIST数据
-def load_data_fashion_mnist(batch_size):    
+def load_data_fashion_mnist(batch_size,root=datasets_path):    
     # fashionMNIST
     mnist_train = torchvision.datasets.FashionMNIST(
-        root='../datasets/', 
+        root=root,
         train=True, download=False,                   
         transform=transforms.ToTensor())
 
     mnist_test = torchvision.datasets.FashionMNIST(
-        root='../datasets/', 
+        root=root, 
         train=False, download=False,         
         transform=transforms.ToTensor())
         
@@ -127,7 +125,7 @@ def evaluate_accuracy(data_iter,net,device=None):
 
 
 
-def load_data_fashion_mnist_resize(batch_size, resize=None, root='../datasets'):
+def load_data_fashion_mnist_resize(batch_size, resize=None, root=datasets_path):
     """Download the fashion mnist dataset and then load into memory."""
     trans = []
     if resize:
@@ -194,7 +192,7 @@ class GlobalAvgPool2d(nn.Module):
 
 
 
-def load_data_CIFAR10(batch_size):
+def load_data_CIFAR10(batch_size,root=datasets_path):
     # 加载数据集
 
     # 图像预处理
@@ -209,10 +207,10 @@ def load_data_CIFAR10(batch_size):
     ])
 
     # CIFAR10 dataset
-    train_dataset = torchvision.datasets.CIFAR10(root='../datasets/', train=True, 
+    train_dataset = torchvision.datasets.CIFAR10(root=root, train=True, 
                     download=False, transform=transform)
 
-    test_dataset= torchvision.datasets.CIFAR10(root='../datasets/', train=False,
+    test_dataset= torchvision.datasets.CIFAR10(root=root, train=False,
         download=False, transform=transform)
 
     # data loader
@@ -258,3 +256,6 @@ def eval_acc_loss(data_iter,net,loss,device=None):
         test_acc=acc_sum/n       
             
     return test_acc,test_loss
+
+
+
