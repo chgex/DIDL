@@ -7,3 +7,4 @@ datasets/
 2014_ZFNet/weights/
 2016_FENet/__pycache__/
 script/__pycache__/
+OD-2014-selectSearch/*.jpg
