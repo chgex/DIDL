@@ -11,3 +11,4 @@ OD-2014-selectSearch/*.jpg
 OD-2014-R-CNN/*.jpg
 OD-2014-R-CNN/*.xml
 OD-2014-R-CNN/.vscode
+OD-2014-R-CNN/__pycache__/
