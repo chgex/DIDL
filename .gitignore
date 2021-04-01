@@ -8,3 +8,6 @@ datasets/
 2016_FENet/__pycache__/
 script/__pycache__/
 OD-2014-selectSearch/*.jpg
+OD-2014-R-CNN/*.jpg
+OD-2014-R-CNN/*.xml
+OD-2014-R-CNN/.vscode
