@@ -12,3 +12,7 @@ OD-2014-R-CNN/*.jpg
 OD-2014-R-CNN/*.xml
 OD-2014-R-CNN/.vscode
 OD-2014-R-CNN/__pycache__/
+OD-2015-FastRCNN/__pycache__/
+OD-2015-FastRCNN/*.png
+OD-2015-FastRCNN/*.txt
+
